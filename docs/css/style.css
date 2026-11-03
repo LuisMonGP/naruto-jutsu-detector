@@ -20,6 +20,35 @@
   padding: 0;
 }
 
+/* Estilos Globales & Impeccable Craft Floor */
+::selection {
+  background: rgba(255, 140, 0, 0.35);
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07090e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 140, 0, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 140, 0, 0.5);
+}
+
+:focus-visible {
+  outline: 2px solid #ff8c00;
+  outline-offset: 2px;
+}
+
 body {
   background-color: var(--bg-dark);
   color: #f1f5f9;
@@ -27,6 +56,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Header */
