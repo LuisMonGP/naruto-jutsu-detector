@@ -16,3 +16,10 @@ build/
 
 .DS_Store
 Thumbs.db
+
+# Tools & temporary trace artifacts
+tools/vtracer.exe
+tools/preview/
+tools/test_out/
+tools/all_seals/
+
