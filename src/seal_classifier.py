@@ -1,4 +1,4 @@
-"""Clasificador Geométrico de Sellos de Manos de Naruto."""
+"""Clasificador Geométrico de los 12 Sellos Sagrados de Naruto + Posturas Especiales."""
 
 from __future__ import annotations
 
@@ -7,9 +7,25 @@ import numpy as np
 
 
 class SealClassifier:
-    """Clasifica configuraciones de manos en sellos clásicos (Tigre, Carnero, Serpiente, Cruz, Palma Abierta)."""
+    """Clasifica configuraciones de manos en los 12 sellos canónicos del zodíaco ninja y posturas de Jutsu."""
 
-    SELLOS = ["TORA", "HITSUJI", "MI", "KAGE_BUNSHIN_CROSS", "OPEN_PALM", "NONE"]
+    SELLOS = [
+        "TORI",               # Pájaro (酉)
+        "I",                  # Jabalí (亥)
+        "INU",                # Perro (戌)
+        "TATSU",              # Dragón (辰)
+        "U",                  # Liebre (卯)
+        "UMA",                # Caballo (午)
+        "SARU",               # Mono (申)
+        "USHI",               # Buey (丑)
+        "HITSUJI",            # Carnero (未)
+        "NE",                 # Rata (子)
+        "MI",                 # Serpiente (巳)
+        "TORA",               # Tigre (寅)
+        "OPEN_PALM",          # Palma Abierta (Rasengan)
+        "KAGE_BUNSHIN_CROSS", # Sello de la Cruz (Clones)
+        "NONE",               # Sin sello detectado
+    ]
 
     def clasificar(
         self,
@@ -17,45 +33,138 @@ class SealClassifier:
         angulos_mano2: Optional[Dict[str, float]] = None,
         distancia_manos: float = 1.0,
     ) -> Tuple[str, float]:
-        """Determina el sello presente según la postura geométrica.
+        """Determina el sello presente según la configuración angular y proximidad de ambas manos."""
 
-        Args:
-            angulos_mano1: Ángulos de extensión de la primera mano.
-            angulos_mano2: Ángulos de la segunda mano (si ambas están visibles).
-            distancia_manos: Distancia euclídea normalizada entre muñecas.
+        # -------------------------------------------------------------
+        # 1. GESTOS A DOS MANOS (Prioridad cuando ambas manos están juntas)
+        # -------------------------------------------------------------
+        if angulos_mano2 is not None and distancia_manos < 0.42:
+            # Sello de Cruz Kage Bunshin
+            if (
+                angulos_mano1.get("index", 0) > 135
+                and angulos_mano2.get("index", 0) > 135
+                and angulos_mano1.get("ring", 0) < 110
+                and angulos_mano2.get("ring", 0) < 110
+            ):
+                return "KAGE_BUNSHIN_CROSS", 0.95
 
-        Returns:
-            Tuple[str, float]: Nombre del sello y score de confianza [0.0, 1.0].
-        """
-        # 1. Sello del Tigre (Tora): Índices y pulgares extendidos hacia arriba
-        if angulos_mano1.get("index", 0) > 150 and angulos_mano1.get("ring", 0) < 90:
-            if angulos_mano2 and angulos_mano2.get("index", 0) > 150:
-                return "TORA", 0.94
-            return "TORA", 0.82
+            # Perro (Inu): Una mano abierta plana sobre un puño cerrado
+            mano1_abierta = all(angulos_mano1.get(d, 0) > 130 for d in ["index", "middle", "ring", "pinky"])
+            mano2_cerrada = all(angulos_mano2.get(d, 0) < 110 for d in ["index", "middle", "ring", "pinky"])
+            mano2_abierta = all(angulos_mano2.get(d, 0) > 130 for d in ["index", "middle", "ring", "pinky"])
+            mano1_cerrada = all(angulos_mano1.get(d, 0) < 110 for d in ["index", "middle", "ring", "pinky"])
 
-        # 2. Sello del Carnero (Hitsuji): Índices y medios erguidos
-        if (
-            angulos_mano1.get("index", 0) > 150
-            and angulos_mano1.get("middle", 0) > 150
-            and angulos_mano1.get("pinky", 0) < 90
-        ):
-            return "HITSUJI", 0.91
+            if (mano1_abierta and mano2_cerrada) or (mano2_abierta and mano1_cerrada):
+                return "INU", 0.93
 
-        # 3. Palma Abierta (Rasengan Stance): Los 5 dedos extendidos
-        if all(angulos_mano1.get(d, 0) > 140 for d in ["thumb", "index", "middle", "ring", "pinky"]):
-            return "OPEN_PALM", 0.96
+            # Jabalí (I): Ambas manos en puño cerrado
+            if (
+                all(angulos_mano1.get(d, 0) < 115 for d in ["index", "middle", "ring", "pinky"])
+                and all(angulos_mano2.get(d, 0) < 115 for d in ["index", "middle", "ring", "pinky"])
+            ):
+                return "I", 0.92
 
-        # 4. Sello de Cruz Kage Bunshin (manos cercanas y cruzadas)
-        if angulos_mano2 and distancia_manos < 0.35:
+            # Pájaro (Tori): Pulgares y meñiques extendidos, dedos centrales plegados
+            if (
+                angulos_mano1.get("pinky", 0) > 125
+                and angulos_mano2.get("pinky", 0) > 125
+                and angulos_mano1.get("middle", 0) < 120
+                and angulos_mano2.get("middle", 0) < 120
+            ):
+                return "TORI", 0.90
+
+            # Caballo (Uma): Índices en tienda triangular, dedos restantes plegados
             if (
                 angulos_mano1.get("index", 0) > 140
                 and angulos_mano2.get("index", 0) > 140
-                and angulos_mano1.get("ring", 0) < 100
+                and angulos_mano1.get("middle", 0) < 110
+                and angulos_mano2.get("middle", 0) < 110
+                and angulos_mano1.get("pinky", 0) < 100
             ):
-                return "KAGE_BUNSHIN_CROSS", 0.93
+                return "UMA", 0.88
 
-        # 5. Sello de la Serpiente (Mi): Manos unidas entrelazadas
-        if angulos_mano2 and distancia_manos < 0.25:
-            return "MI", 0.88
+            # Rata (Ne): Mano derecha con índice/medio erguidos envuelta por la izquierda
+            if (
+                angulos_mano1.get("index", 0) > 140
+                and angulos_mano1.get("middle", 0) > 140
+                and angulos_mano1.get("ring", 0) < 105
+                and all(angulos_mano2.get(d, 0) < 120 for d in ["middle", "ring", "pinky"])
+            ):
+                return "NE", 0.91
+
+            # Buey (Ushi): Mano 1 extendida, mano 2 con índice y medio cruzados
+            if (
+                angulos_mano1.get("index", 0) > 135
+                and angulos_mano1.get("middle", 0) > 135
+                and angulos_mano2.get("index", 0) > 135
+                and angulos_mano2.get("ring", 0) < 105
+            ):
+                return "USHI", 0.88
+
+            # Carnero (Hitsuji): Índices y medios erguidos juntos en paralelo
+            if (
+                angulos_mano1.get("index", 0) > 145
+                and angulos_mano1.get("middle", 0) > 145
+                and angulos_mano2.get("index", 0) > 140
+                and angulos_mano2.get("middle", 0) > 140
+                and angulos_mano1.get("pinky", 0) < 105
+            ):
+                return "HITSUJI", 0.94
+
+            # Tigre (Tora): Índices erguidos hacia arriba juntos
+            if (
+                angulos_mano1.get("index", 0) > 145
+                and angulos_mano2.get("index", 0) > 140
+                and angulos_mano1.get("ring", 0) < 105
+                and angulos_mano2.get("ring", 0) < 105
+            ):
+                return "TORA", 0.95
+
+            # Mono (Saru): Dedos extendidos horizontalmente entre ambas manos
+            if (
+                all(angulos_mano1.get(d, 0) > 130 for d in ["index", "middle", "ring"])
+                and all(angulos_mano2.get(d, 0) > 130 for d in ["index", "middle", "ring"])
+            ):
+                return "SARU", 0.87
+
+            # Dragón (Tatsu) / Serpiente (Mi): Manos unidas entrelazadas
+            if angulos_mano1.get("thumb", 0) > 130 and angulos_mano2.get("thumb", 0) > 130:
+                return "TATSU", 0.86
+            return "MI", 0.89
+
+        # -------------------------------------------------------------
+        # 2. GESTOS UNIMANUALES O STANDALONE
+        # -------------------------------------------------------------
+        # Palma Abierta (Rasengan): los 5 dedos extendidos
+        if all(angulos_mano1.get(d, 0) > 138 for d in ["thumb", "index", "middle", "ring", "pinky"]):
+            return "OPEN_PALM", 0.96
+
+        # Carnero unimanual: Índices y medios rectos
+        if (
+            angulos_mano1.get("index", 0) > 145
+            and angulos_mano1.get("middle", 0) > 145
+            and angulos_mano1.get("pinky", 0) < 100
+        ):
+            return "HITSUJI", 0.89
+
+        # Liebre (U): Forma de pistola (pulgar e índice extendidos)
+        if (
+            angulos_mano1.get("thumb", 0) > 135
+            and angulos_mano1.get("index", 0) > 140
+            and angulos_mano1.get("middle", 0) < 105
+            and angulos_mano1.get("ring", 0) < 105
+            and angulos_mano1.get("pinky", 0) < 105
+        ):
+            return "U", 0.91
+
+        # Tigre unimanual: Solo índice erguido, pulgar y demás replegados
+        if (
+            angulos_mano1.get("index", 0) > 145
+            and angulos_mano1.get("middle", 0) < 100
+            and angulos_mano1.get("ring", 0) < 100
+            and angulos_mano1.get("pinky", 0) < 100
+            and angulos_mano1.get("thumb", 0) <= 135
+        ):
+            return "TORA", 0.88
 
         return "NONE", 0.50

@@ -9,6 +9,10 @@ __pycache__/
 .vscode/
 .idea/
 
-# SO
+# Build & Distribution
+*.egg-info/
+dist/
+build/
+
 .DS_Store
 Thumbs.db

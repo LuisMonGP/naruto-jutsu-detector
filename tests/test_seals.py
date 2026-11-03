@@ -21,9 +21,9 @@ def test_normalizacion_landmarks_unitarios():
 
 def test_clasificacion_sello_tigre():
     classifier = SealClassifier()
-    # Mock dedos: Índice extendido (>150), anular cerrado (<90)
+    # Tigre unimanual: índice extendido erguido, pulgar y dedos restantes plegados
     angulos = {
-        "thumb": 160.0,
+        "thumb": 90.0,
         "index": 170.0,
         "middle": 80.0,
         "ring": 70.0,
@@ -32,6 +32,23 @@ def test_clasificacion_sello_tigre():
     sello, conf = classifier.clasificar(angulos)
     assert sello == "TORA"
     assert conf >= 0.80
+
+
+def test_clasificacion_sello_jabali():
+    classifier = SealClassifier()
+    angulos_cerrados = {"thumb": 80.0, "index": 70.0, "middle": 65.0, "ring": 60.0, "pinky": 55.0}
+    sello, conf = classifier.clasificar(angulos_cerrados, angulos_cerrados, distancia_manos=0.20)
+    assert sello == "I"
+    assert conf >= 0.85
+
+
+def test_clasificacion_sello_perro():
+    classifier = SealClassifier()
+    mano_abierta = {"thumb": 150.0, "index": 160.0, "middle": 160.0, "ring": 155.0, "pinky": 150.0}
+    mano_cerrada = {"thumb": 80.0, "index": 70.0, "middle": 65.0, "ring": 60.0, "pinky": 55.0}
+    sello, conf = classifier.clasificar(mano_abierta, mano_cerrada, distancia_manos=0.25)
+    assert sello == "INU"
+    assert conf >= 0.85
 
 
 def test_fsm_activacion_katon():
@@ -47,3 +64,29 @@ def test_fsm_activacion_rasengan():
     fsm = JutsuFSM(debounce_frames=1)
     jutsu = fsm.registrar_frame("OPEN_PALM")
     assert jutsu == "RASENGAN"
+
+
+def test_clasificacion_sello_pajaro():
+    classifier = SealClassifier()
+    angulos = {"thumb": 150.0, "index": 90.0, "middle": 80.0, "ring": 80.0, "pinky": 140.0}
+    sello, conf = classifier.clasificar(angulos, angulos, distancia_manos=0.25)
+    assert sello == "TORI"
+    assert conf >= 0.85
+
+
+def test_clasificacion_sello_liebre():
+    classifier = SealClassifier()
+    # Pistola unimanual: pulgar e índice extendidos, demás cerrados
+    angulos = {"thumb": 155.0, "index": 160.0, "middle": 75.0, "ring": 70.0, "pinky": 65.0}
+    sello, conf = classifier.clasificar(angulos)
+    assert sello == "U"
+    assert conf >= 0.85
+
+
+def test_clasificacion_sello_kage_bunshin():
+    classifier = SealClassifier()
+    mano = {"thumb": 90.0, "index": 150.0, "middle": 80.0, "ring": 80.0, "pinky": 70.0}
+    sello, conf = classifier.clasificar(mano, mano, distancia_manos=0.20)
+    assert sello == "KAGE_BUNSHIN_CROSS"
+    assert conf >= 0.90
+

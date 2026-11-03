@@ -46,7 +46,7 @@
         <div id="start-overlay" class="overlay-backdrop">
           <div class="welcome-box">
             <h2>Reconocimiento de Sellos en Vivo</h2>
-            <p>Activa tu cámara para detectar sellos tradicionales y activar jutsus con efectos visuales directamente en tu navegador.</p>
+            <p>Activa tu cámara para detectar los 12 sellos sagrados del zodíaco ninja y desatar jutsus con efectos visuales en tiempo real.</p>
             <div class="privacy-badge">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span>Procesamiento 100% local y privado. Ningún video sale de tu equipo.</span>
@@ -64,11 +64,11 @@
         <!-- Barra de Estado Inferior -->
         <div class="telemetry-bar">
           <div class="status-group">
-            <span class="status-label">Sello actual:</span>
+            <span class="status-label">Sello detectado:</span>
             <span class="status-value" id="current-seal">Buscando manos...</span>
           </div>
           <div class="combo-group">
-            <span class="status-label">Secuencia:</span>
+            <span class="status-label">Secuencia FSM:</span>
             <div class="combo-indicators" id="combo-slots">
               <span class="slot" aria-label="Sello 1"></span>
               <span class="slot" aria-label="Sello 2"></span>
@@ -79,49 +79,130 @@
       </div>
     </section>
 
-    <!-- Guía y Simulador Lateral -->
+    <!-- Guía Lateral: Los 12 Sellos y Técnicas -->
     <aside class="sidebar-panel">
-      <div class="sidebar-header">
-        <h2 class="sidebar-title">Técnicas y Sellos</h2>
-        <span class="sidebar-count">4 Jutsus</span>
+      <!-- Selector de Pestañas -->
+      <div class="sidebar-tabs">
+        <button class="tab-btn active" id="tab-seals-btn" type="button">Los 12 Sellos</button>
+        <button class="tab-btn" id="tab-jutsus-btn" type="button">Técnicas (Jutsus)</button>
       </div>
 
-      <div class="techniques-list">
-        <article class="technique-item">
-          <div class="technique-header">
-            <h3 class="technique-name">Katon: Gōkakyū no Jutsu</h3>
-            <span class="badge-tag">Fuego</span>
-          </div>
-          <p class="technique-recipe">Secuencia: <code>Serpiente</code> ➔ <code>Carnero</code> ➔ <code>Tigre</code></p>
-          <button class="test-trigger" data-jutsu="KATON" type="button">Probar técnica</button>
-        </article>
+      <!-- Vista 1: Los 12 Sellos del Zodíaco Ninja -->
+      <div class="tab-view" id="view-seals">
+        <div class="seals-header">
+          <h2 class="sidebar-title">Zodíaco Shinobi</h2>
+          <span class="sidebar-count">12 Sellos</span>
+        </div>
+        <p class="section-hint">Haz el gesto con tus manos ante la cámara o pulsa para simularlo:</p>
 
-        <article class="technique-item">
-          <div class="technique-header">
-            <h3 class="technique-name">Chidori</h3>
-            <span class="badge-tag">Rayo</span>
-          </div>
-          <p class="technique-recipe">Secuencia: <code>Tigre</code> ➔ <code>Carnero</code></p>
-          <button class="test-trigger" data-jutsu="CHIDORI" type="button">Probar técnica</button>
-        </article>
+        <div class="seals-grid" id="seals-grid">
+          <button class="seal-tile" data-seal="TORI" type="button" title="Pájaro: Pulgares y meñiques en punta, centrales plegados">
+            <span class="seal-kanji">酉</span>
+            <span class="seal-name">Pájaro</span>
+            <span class="seal-romaji">Tori</span>
+          </button>
+          <button class="seal-tile" data-seal="I" type="button" title="Jabalí: Muñecas arriba, ambos puños cerrados">
+            <span class="seal-kanji">亥</span>
+            <span class="seal-name">Jabalí</span>
+            <span class="seal-romaji">I</span>
+          </button>
+          <button class="seal-tile" data-seal="INU" type="button" title="Perro: Palma abierta plana sobre puño cerrado">
+            <span class="seal-kanji">戌</span>
+            <span class="seal-name">Perro</span>
+            <span class="seal-romaji">Inu</span>
+          </button>
+          <button class="seal-tile" data-seal="TATSU" type="button" title="Dragón: Manos unidas entrelazadas en rombo">
+            <span class="seal-kanji">辰</span>
+            <span class="seal-name">Dragón</span>
+            <span class="seal-romaji">Tatsu</span>
+          </button>
+          <button class="seal-tile" data-seal="U" type="button" title="Liebre: Mano en forma de pistola horizontal">
+            <span class="seal-kanji">卯</span>
+            <span class="seal-name">Liebre</span>
+            <span class="seal-romaji">U</span>
+          </button>
+          <button class="seal-tile" data-seal="UMA" type="button" title="Caballo: Índices en tienda triangular">
+            <span class="seal-kanji">午</span>
+            <span class="seal-name">Caballo</span>
+            <span class="seal-romaji">Uma</span>
+          </button>
+          <button class="seal-tile" data-seal="SARU" type="button" title="Mono: Manos paralelas dedos extendidos">
+            <span class="seal-kanji">申</span>
+            <span class="seal-name">Mono</span>
+            <span class="seal-romaji">Saru</span>
+          </button>
+          <button class="seal-tile" data-seal="USHI" type="button" title="Buey: Dedos índice y medio cruzados">
+            <span class="seal-kanji">丑</span>
+            <span class="seal-name">Buey</span>
+            <span class="seal-romaji">Ushi</span>
+          </button>
+          <button class="seal-tile" data-seal="HITSUJI" type="button" title="Carnero: Índices y medios rectos juntos">
+            <span class="seal-kanji">未</span>
+            <span class="seal-name">Carnero</span>
+            <span class="seal-romaji">Hitsuji</span>
+          </button>
+          <button class="seal-tile" data-seal="NE" type="button" title="Rata: Mano con dos dedos erguidos envuelta por la otra">
+            <span class="seal-kanji">子</span>
+            <span class="seal-name">Rata</span>
+            <span class="seal-romaji">Ne</span>
+          </button>
+          <button class="seal-tile" data-seal="MI" type="button" title="Serpiente: Manos juntas entrelazadas">
+            <span class="seal-kanji">巳</span>
+            <span class="seal-name">Serpiente</span>
+            <span class="seal-romaji">Mi</span>
+          </button>
+          <button class="seal-tile" data-seal="TORA" type="button" title="Tigre: Índices erguidos hacia arriba juntos">
+            <span class="seal-kanji">寅</span>
+            <span class="seal-name">Tigre</span>
+            <span class="seal-romaji">Tora</span>
+          </button>
+        </div>
+      </div>
 
-        <article class="technique-item">
-          <div class="technique-header">
-            <h3 class="technique-name">Rasengan</h3>
-            <span class="badge-tag">Chakra</span>
-          </div>
-          <p class="technique-recipe">Postura: <code>Palma Abierta</code> hacia la cámara</p>
-          <button class="test-trigger" data-jutsu="RASENGAN" type="button">Probar técnica</button>
-        </article>
+      <!-- Vista 2: Fórmulas de Jutsus -->
+      <div class="tab-view hidden" id="view-jutsus">
+        <div class="sidebar-header">
+          <h2 class="sidebar-title">Fórmulas de Jutsus</h2>
+          <span class="sidebar-count">4 Técnicas</span>
+        </div>
 
-        <article class="technique-item">
-          <div class="technique-header">
-            <h3 class="technique-name">Kage Bunshin no Jutsu</h3>
-            <span class="badge-tag">Clones</span>
-          </div>
-          <p class="technique-recipe">Postura: <code>Sello de Cruz</code> con dedos índices</p>
-          <button class="test-trigger" data-jutsu="KAGE_BUNSHIN" type="button">Probar técnica</button>
-        </article>
+        <div class="techniques-list">
+          <article class="technique-item">
+            <div class="technique-header">
+              <h3 class="technique-name">Katon: Gōkakyū no Jutsu</h3>
+              <span class="badge-tag">Fuego</span>
+            </div>
+            <p class="technique-recipe">Secuencia: <code>Serpiente</code> ➔ <code>Carnero</code> ➔ <code>Tigre</code></p>
+            <button class="test-trigger" data-jutsu="KATON" type="button">Probar técnica</button>
+          </article>
+
+          <article class="technique-item">
+            <div class="technique-header">
+              <h3 class="technique-name">Chidori</h3>
+              <span class="badge-tag">Rayo</span>
+            </div>
+            <p class="technique-recipe">Secuencia: <code>Tigre</code> ➔ <code>Carnero</code></p>
+            <button class="test-trigger" data-jutsu="CHIDORI" type="button">Probar técnica</button>
+          </article>
+
+          <article class="technique-item">
+            <div class="technique-header">
+              <h3 class="technique-name">Rasengan</h3>
+              <span class="badge-tag">Chakra</span>
+            </div>
+            <p class="technique-recipe">Postura: <code>Palma Abierta</code> hacia la cámara</p>
+            <button class="test-trigger" data-jutsu="RASENGAN" type="button">Probar técnica</button>
+          </article>
+
+          <article class="technique-item">
+            <div class="technique-header">
+              <h3 class="technique-name">Kage Bunshin no Jutsu</h3>
+              <span class="badge-tag">Clones</span>
+            </div>
+            <p class="technique-recipe">Postura: <code>Sello de Cruz</code> con dedos índices</p>
+            <button class="test-trigger" data-jutsu="KAGE_BUNSHIN" type="button">Probar técnica</button>
+          </article>
+        </div>
       </div>
     </aside>
   </main>

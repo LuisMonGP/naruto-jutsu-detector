@@ -94,36 +94,146 @@ document.addEventListener('DOMContentLoaded', () => {
       distBetweenWrists = Math.hypot(hand1[0].x - hand2[0].x, hand1[0].y - hand2[0].y);
     }
 
-    // 1. Palma Abierta (Rasengan Stance)
+    // -------------------------------------------------------------
+    // 1. CONFIGURACIONES BIMANUALES (ZODÍACO NINJA Y SELLOS COMPUESTOS)
+    // Se evalúan primero para evitar falsos positivos con posturas abiertas
+    // -------------------------------------------------------------
+    if (angles2 && distBetweenWrists < 0.42) {
+      // Sello de Cruz Kage Bunshin
+      if (
+        angles1.index > 135 &&
+        angles2.index > 135 &&
+        angles1.ring < 110 &&
+        angles2.ring < 110
+      ) {
+        return "KAGE_BUNSHIN_CROSS";
+      }
+
+      // Perro (Inu): Una mano abierta plana sobre un puño cerrado
+      const m1Open = angles1.index > 130 && angles1.middle > 130 && angles1.ring > 130 && angles1.pinky > 130;
+      const m2Closed = angles2.index < 110 && angles2.middle < 110 && angles2.ring < 110 && angles2.pinky < 110;
+      const m2Open = angles2.index > 130 && angles2.middle > 130 && angles2.ring > 130 && angles2.pinky > 130;
+      const m1Closed = angles1.index < 110 && angles1.middle < 110 && angles1.ring < 110 && angles1.pinky < 110;
+      if ((m1Open && m2Closed) || (m2Open && m1Closed)) {
+        return "INU";
+      }
+
+      // Jabalí (I): Ambas manos en puño cerrado
+      if (
+        angles1.index < 115 && angles1.middle < 115 && angles1.ring < 115 && angles1.pinky < 115 &&
+        angles2.index < 115 && angles2.middle < 115 && angles2.ring < 115 && angles2.pinky < 115
+      ) {
+        return "I";
+      }
+
+      // Pájaro (Tori): Pulgares y meñiques extendidos, dedos centrales plegados
+      if (
+        angles1.pinky > 125 && angles2.pinky > 125 &&
+        angles1.middle < 120 && angles2.middle < 120
+      ) {
+        return "TORI";
+      }
+
+      // Caballo (Uma): Índices en tienda triangular, dedos restantes plegados
+      if (
+        angles1.index > 140 && angles2.index > 140 &&
+        angles1.middle < 110 && angles2.middle < 110 &&
+        angles1.pinky < 100
+      ) {
+        return "UMA";
+      }
+
+      // Rata (Ne): Índice y medio erguidos envueltos por la otra mano
+      if (
+        angles1.index > 140 && angles1.middle > 140 && angles1.ring < 105 &&
+        angles2.middle < 120 && angles2.ring < 120 && angles2.pinky < 120
+      ) {
+        return "NE";
+      }
+
+      // Buey (Ushi): Mano 1 extendida, mano 2 cruzada
+      if (
+        angles1.index > 135 && angles1.middle > 135 &&
+        angles2.index > 135 && angles2.ring < 105
+      ) {
+        return "USHI";
+      }
+
+      // Carnero (Hitsuji): Índices y medios rectos juntos en paralelo
+      if (
+        angles1.index > 145 && angles1.middle > 145 &&
+        angles2.index > 140 && angles2.middle > 140 &&
+        angles1.pinky < 105
+      ) {
+        return "HITSUJI";
+      }
+
+      // Tigre (Tora): Índices erguidos hacia arriba juntos
+      if (
+        angles1.index > 145 && angles2.index > 140 &&
+        angles1.ring < 105 && angles2.ring < 105
+      ) {
+        return "TORA";
+      }
+
+      // Mono (Saru): Dedos extendidos horizontalmente entre ambas manos
+      if (
+        angles1.index > 130 && angles1.middle > 130 && angles1.ring > 130 &&
+        angles2.index > 130 && angles2.middle > 130 && angles2.ring > 130
+      ) {
+        return "SARU";
+      }
+
+      // Dragón (Tatsu) / Serpiente (Mi): Manos entrelazadas
+      if (angles1.thumb > 130 && angles2.thumb > 130) {
+        return "TATSU";
+      }
+      return "MI";
+    }
+
+    // -------------------------------------------------------------
+    // 2. GESTOS UNIMANUALES O STANDALONE
+    // -------------------------------------------------------------
+    // Palma Abierta (Rasengan): los 5 dedos extendidos
     if (
-      angles1.thumb > 135 &&
-      angles1.index > 140 &&
-      angles1.middle > 140 &&
-      angles1.ring > 135 &&
-      angles1.pinky > 135
+      angles1.thumb > 138 &&
+      angles1.index > 138 &&
+      angles1.middle > 138 &&
+      angles1.ring > 138 &&
+      angles1.pinky > 138
     ) {
       return "OPEN_PALM";
     }
 
-    // 2. Sello de la Cruz Kage Bunshin (2 manos juntas con dedos índice)
-    if (hand2 && distBetweenWrists < 0.28) {
-      if (angles1.index > 135 && angles2.index > 135 && angles1.ring < 110) {
-        return "KAGE_BUNSHIN_CROSS";
-      }
-      // Sello de la Serpiente (Mi): manos unidas entrelazadas
-      return "MI";
-    }
-
-    // 3. Sello del Tigre (Tora): Índices extendidos erguidos
-    if (angles1.index > 145 && angles1.ring < 110) {
-      if (!hand2 || angles2.index > 145) {
-        return "TORA";
-      }
-    }
-
-    // 4. Sello del Carnero (Hitsuji): Índices y medios erguidos
-    if (angles1.index > 145 && angles1.middle > 145 && angles1.pinky < 110) {
+    // Carnero unimanual: Índices y medios rectos
+    if (
+      angles1.index > 145 &&
+      angles1.middle > 145 &&
+      angles1.pinky < 100
+    ) {
       return "HITSUJI";
+    }
+
+    // Liebre (U): Forma de pistola (pulgar e índice extendidos)
+    if (
+      angles1.thumb > 135 &&
+      angles1.index > 140 &&
+      angles1.middle < 105 &&
+      angles1.ring < 105 &&
+      angles1.pinky < 105
+    ) {
+      return "U";
+    }
+
+    // Tigre unimanual: Solo índice erguido, los demás replegados
+    if (
+      angles1.index > 145 &&
+      angles1.middle < 100 &&
+      angles1.ring < 100 &&
+      angles1.pinky < 100 &&
+      angles1.thumb <= 135
+    ) {
+      return "TORA";
     }
 
     return "NONE";
@@ -243,10 +353,87 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4500);
   }
 
-  // Botones de prueba manual
+  // Botones de prueba manual de Jutsus
   testTriggers.forEach(btn => {
     btn.addEventListener('click', () => {
       triggerJutsu(btn.dataset.jutsu);
+    });
+  });
+
+  // Mapeo completo de los 12 sellos canónicos + técnicas especiales
+  const sealNamesMap = {
+    'TORI': 'Pájaro (酉 · Tori)',
+    'I': 'Jabalí (亥 · I)',
+    'INU': 'Perro (戌 · Inu)',
+    'TATSU': 'Dragón (辰 · Tatsu)',
+    'U': 'Liebre (卯 · U)',
+    'UMA': 'Caballo (午 · Uma)',
+    'SARU': 'Mono (申 · Saru)',
+    'USHI': 'Buey (丑 · Ushi)',
+    'HITSUJI': 'Carnero (未 · Hitsuji)',
+    'NE': 'Rata (子 · Ne)',
+    'MI': 'Serpiente (巳 · Mi)',
+    'TORA': 'Tigre (寅 · Tora)',
+    'KAGE_BUNSHIN_CROSS': 'Cruz de Clones',
+    'OPEN_PALM': 'Palma Abierta (Rasengan)',
+    'NONE': 'Mano activa (sin sello)'
+  };
+
+  function updateSealTilesHighlight(activeSeal) {
+    document.querySelectorAll('.seal-tile').forEach(tile => {
+      if (activeSeal && tile.dataset.seal === activeSeal) {
+        tile.classList.add('active');
+      } else {
+        tile.classList.remove('active');
+      }
+    });
+  }
+
+  // Control de Pestañas (Los 12 Sellos vs Fórmulas de Jutsus)
+  const tabSealsBtn = document.getElementById('tab-seals-btn');
+  const tabJutsusBtn = document.getElementById('tab-jutsus-btn');
+  const viewSeals = document.getElementById('view-seals');
+  const viewJutsus = document.getElementById('view-jutsus');
+
+  if (tabSealsBtn && tabJutsusBtn && viewSeals && viewJutsus) {
+    tabSealsBtn.addEventListener('click', () => {
+      tabSealsBtn.classList.add('active');
+      tabJutsusBtn.classList.remove('active');
+      viewSeals.classList.remove('hidden');
+      viewJutsus.classList.add('hidden');
+    });
+
+    tabJutsusBtn.addEventListener('click', () => {
+      tabJutsusBtn.classList.add('active');
+      tabSealsBtn.classList.remove('active');
+      viewJutsus.classList.remove('hidden');
+      viewSeals.classList.add('hidden');
+    });
+  }
+
+  // Clic interactivo en los 12 sellos para simulación / prueba directa
+  const sealTiles = document.querySelectorAll('.seal-tile');
+  sealTiles.forEach(tile => {
+    tile.addEventListener('click', () => {
+      const seal = tile.dataset.seal;
+      if (!seal) return;
+
+      updateSealTilesHighlight(seal);
+      const name = sealNamesMap[seal] || seal;
+
+      // Anclar posición de VFX al centro de la pantalla
+      fallbackHandPos = { x: 0.5, y: 0.5 };
+
+      // Registrar sello en el historial de combo FSM
+      const now = performance.now();
+      comboHistory.push({ seal, time: now });
+      if (comboHistory.length > 3) comboHistory.shift();
+      updateComboSlotsUI();
+      checkJutsuActivation();
+
+      if (!activeJutsu) {
+        currentSealEl.textContent = `Sello: ${name}`;
+      }
     });
   });
 
@@ -434,19 +621,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (detectedHands.length > 0) {
         currentDetectedSeal = classifyHandSeals(detectedHands);
         updateComboState(currentDetectedSeal);
+        updateSealTilesHighlight(currentDetectedSeal);
 
-        // Actualizar etiqueta del HUD
-        const sealNamesMap = {
-          'TORA': 'Tigre (Tora)',
-          'HITSUJI': 'Carnero (Hitsuji)',
-          'MI': 'Serpiente (Mi)',
-          'KAGE_BUNSHIN_CROSS': 'Cruz de Clones',
-          'OPEN_PALM': 'Palma Abierta',
-          'NONE': 'Mano activa (sin sello)'
-        };
-        currentSealEl.textContent = sealNamesMap[currentDetectedSeal] || 'Mano activa';
+        if (!activeJutsu) {
+          currentSealEl.textContent = sealNamesMap[currentDetectedSeal] || 'Mano activa';
+        }
       } else {
         currentDetectedSeal = 'NONE';
+        updateSealTilesHighlight(null);
         if (!activeJutsu) {
           currentSealEl.textContent = 'Buscando manos...';
         }

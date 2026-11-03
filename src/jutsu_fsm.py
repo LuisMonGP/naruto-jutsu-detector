@@ -42,15 +42,20 @@ class JutsuFSM:
             self.historial_sellos.popleft()
 
         # Debounce: El sello debe mantenerse estable durante varios frames consecutivos
-        if sello_detectado == self._ultimo_sello and sello_detectado != "NONE":
-            self._contador_frames += 1
-            if self._contador_frames == self.debounce_frames:
+        if sello_detectado != "NONE":
+            if sello_detectado == self._ultimo_sello:
+                self._contador_frames += 1
+            else:
+                self._ultimo_sello = sello_detectado
+                self._contador_frames = 1
+
+            if self._contador_frames >= self.debounce_frames:
                 # Agregar al historial si no es duplicado inmediato del último registrado
                 if not self.historial_sellos or self.historial_sellos[-1][0] != sello_detectado:
                     self.historial_sellos.append((sello_detectado, ahora))
         else:
-            self._ultimo_sello = sello_detectado
-            self._contador_frames = 1
+            self._ultimo_sello = "NONE"
+            self._contador_frames = 0
 
         # Comprobar si la secuencia actual dispara algún Jutsu
         secuencia_actual = [item[0] for item in self.historial_sellos]

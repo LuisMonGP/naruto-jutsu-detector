@@ -453,3 +453,125 @@ body {
   background: var(--bg-muted);
   border-color: #94a3b8;
 }
+
+/* Selector de Pestañas en Sidebar */
+.sidebar-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--text-primary);
+  color: #ffffff;
+  border-color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Vistas de Pestañas */
+.tab-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-view.hidden {
+  display: none;
+}
+
+/* Cabecera y Grilla de los 12 Sellos */
+.seals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.section-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.45;
+}
+
+.seals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.seal-tile {
+  background: var(--bg-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 10px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: all 0.15s var(--ease-expo);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.seal-tile:hover {
+  background: #e2e8f0;
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.seal-tile:active {
+  transform: translateY(0);
+}
+
+.seal-tile.active {
+  background: var(--text-primary);
+  color: #ffffff;
+  border-color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.seal-tile.active .seal-romaji {
+  color: #cbd5e1;
+}
+
+.seal-kanji {
+  font-family: var(--font-kanji);
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.seal-name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.seal-romaji {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
