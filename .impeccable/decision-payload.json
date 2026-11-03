@@ -1,0 +1,80 @@
+{
+  "title": "Opciones de Dirección y Aplicación — Naruto Jutsu Detector",
+  "question": "Selecciona la dirección visual y conceptual para el rediseño y elevación de la interfaz web (docs/index.html):",
+  "options": [
+    {
+      "id": "cyber-shinobi-hud",
+      "kind": "assigned",
+      "label": "Cyber-Shinobi Tactical HUD",
+      "kicker": "RECOMENDADA · LEAD",
+      "lineage": "HUD táctico avanzado y telemetría biomecánica de precisión",
+      "thesis": "Interfaz minimalista de alta gama que fusiona la estética shinobi con un HUD futurista ultra-limpio, tipografía geométrica refinada y micro-retículas técnicas sin resplandores artificiales.",
+      "palette": [
+        "#0B0E14",
+        "#1E293B",
+        "#38BDF8",
+        "#F8FAFC"
+      ],
+      "materials": [
+        "cristal ahumado sutil",
+        "bordes milimétricos semi-transparentes",
+        "micro-retícula técnica"
+      ],
+      "viewport": "Cámara central enmarcada con telemetría de sellos en tiempo real, barra superior sobria con enlaces de portafolio y panel de técnicas en tarjetas de precisión con previsualización limpia.",
+      "risk": "Requiere balance milimétrico en jerarquía tipográfica para no recargar el área de video."
+    },
+    {
+      "id": "zen-editorial-shinobi",
+      "kind": "grounded",
+      "label": "Zen Editorial & Sello Imperial",
+      "kicker": "DIRECCIÓN ALTERNATIVA",
+      "lineage": "Minimalismo editorial japonés con acentos de laca y caligrafía moderna",
+      "thesis": "Elegancia pura inspirada en pergaminos contemporáneos: contrastes sobrios sobre carbón profundo, kanjis caligráficos vectoriales y acentos carmesí de sello imperial.",
+      "palette": [
+        "#121214",
+        "#242429",
+        "#E11D48",
+        "#F5F5F0"
+      ],
+      "materials": [
+        "superficies mate sumi-e",
+        "líneas de trazo fino",
+        "sellos vectoriales en laca carmesí"
+      ],
+      "viewport": "Composición balanceada con amplio espacio negativo; el visor de cámara respira y los kanjis de activación se revelan con transiciones suaves y fluidas.",
+      "risk": "Puede sentirse demasiado sobrio si el feedback de partículas no aporta la emoción necesaria."
+    },
+    {
+      "id": "cv-workbench-laboratory",
+      "kind": "grounded",
+      "label": "Computer Vision Engineering Suite",
+      "kicker": "DIRECCIÓN TÉCNICA",
+      "lineage": "Herramientas de instrumentación de visión artificial y telemetría de laboratorio",
+      "thesis": "Enfoque técnico de alto impacto para reclutadores e ingenieros: telemetría en tiempo real (FPS, ángulos articulares de falanges y grafo de estados FSM interactivo en vivo).",
+      "palette": [
+        "#0D1117",
+        "#161B22",
+        "#10B981",
+        "#E6EDF3"
+      ],
+      "materials": [
+        "paneles de instrumentación biselados",
+        "monitores vectoriales de estado",
+        "indicadores monocromáticos de alta legibilidad"
+      ],
+      "viewport": "Consola de control técnico con switch para visualizar esqueletos MediaPipe en vivo, métricas de confianza en la detección y banco de pruebas de combos.",
+      "risk": "Mayor densidad de datos en pantalla; requiere pestañas o paneles colapsables."
+    }
+  ],
+  "reroll": {
+    "registers": [
+      "safer",
+      "bolder"
+    ]
+  },
+  "buildPath": {
+    "value": "code",
+    "toggle": false
+  },
+  "steer": true
+}

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impeccable · Visual Decision Board | Naruto Jutsu Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090B10;
+      --surface: #11151F;
+      --surface-border: #1F2937;
+      --text: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --accent: #38BDF8;
+      --accent-subtle: rgba(56, 189, 248, 0.1);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2.5rem 2rem;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-subtle);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #FFFFFF;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      max-width: 720px;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.75rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #374151;
+    }
+    .card.lead {
+      border-color: #0284C7;
+      background: linear-gradient(180deg, rgba(2, 132, 199, 0.08) 0%, #11151F 100%);
+    }
+    .card-kicker {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .card.lead .card-kicker {
+      color: #38BDF8;
+    }
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 0.5rem;
+    }
+    .card-lineage {
+      font-size: 0.8rem;
+      color: #94A3B8;
+      font-family: 'Fira Code', monospace;
+      margin-bottom: 1.25rem;
+    }
+    .card-thesis {
+      font-size: 0.925rem;
+      color: #CBD5E1;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748B;
+      margin-bottom: 0.5rem;
+    }
+    .palette {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .swatch {
+      flex: 1;
+      height: 36px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+    .swatch-hex {
+      position: absolute;
+      bottom: -18px;
+      left: 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: #64748B;
+    }
+    .materials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+      margin-top: 1.25rem;
+    }
+    .material-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      color: #94A3B8;
+    }
+    .viewport-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.825rem;
+      color: #E2E8F0;
+    }
+    .risk-box {
+      background: rgba(245, 158, 11, 0.05);
+      border-left: 2px solid #F59E0B;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.75rem;
+      color: #FCD34D;
+      margin-bottom: 1.5rem;
+    }
+    .action-btn {
+      width: 100%;
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: #F8FAFC;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .card.lead .action-btn {
+      background: #0284C7;
+      border-color: #0369A1;
+      color: #FFFFFF;
+    }
+    .action-btn:hover {
+      filter: brightness(1.1);
+    }
+    .footer-note {
+      margin-top: 3rem;
+      text-align: center;
+      color: #64748B;
+      font-size: 0.85rem;
+      border-top: 1px solid var(--surface-border);
+      padding-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="badge">Impeccable Decision Board · v4.8</div>
+        <h1>Direcciones Visuales y de Aplicación</h1>
+        <p class="subtitle">Selecciona la dirección estética y funcional para elevar la interfaz web en tiempo real de <strong>Naruto Jutsu Detector</strong> (docs/index.html).</p>
+      </div>
+    </header>
+
+    <div class="cards-grid">
+      <!-- Opción 1: Lead -->
+      <div class="card lead">
+        <div class="card-kicker">★ RECOMENDADA · LEAD</div>
+        <h2 class="card-title">Cyber-Shinobi Tactical HUD</h2>
+        <div class="card-lineage">HUD táctico avanzado y telemetría biomecánica</div>
+        <p class="card-thesis">
+          Interfaz minimalista de alta gama que fusiona la mística ninja con un HUD futurista ultra-limpio. Tipografía geométrica refinada, bordes milimétricos semi-transparentes y cero resplandores neón artificiales.
+        </p>
+        
+        <div class="section-label">Paleta Cromática</div>
+        <div class="palette">
+          <div class="swatch" style="background: #0B0E14;"><span class="swatch-hex">#0B0E14</span></div>
+          <div class="swatch" style="background: #1E293B;"><span class="swatch-hex">#1E293B</span></div>
+          <div class="swatch" style="background: #38BDF8;"><span class="swatch-hex">#38BDF8</span></div>
+          <div class="swatch" style="background: #F8FAFC;"><span class="swatch-hex">#F8FAFC</span></div>
+        </div>
+
+        <div class="section-label" style="margin-top: 1.5rem;">Materiales & Texturas</div>
+        <div class="materials">
+          <span class="material-pill">Cristal ahumado sutil</span>
+          <span class="material-pill">Bordes milimétricos</span>
+          <span class="material-pill">Micro-retícula técnica</span>
+        </div>
+
+        <div class="section-label">Composición de Viewport</div>
+        <div class="viewport-box">
+          Cámara central enmarcada con telemetría de sellos en tiempo real, barra superior sobria con enlaces de portafolio y panel de técnicas en tarjetas de precisión con previsualización limpia.
+        </div>
+
+        <div class="risk-box">
+          <strong>Riesgo a vigilar:</strong> Mantener estricto balance en jerarquía tipográfica para no sobrecargar el visor de video.
+        </div>
+
+        <button class="action-btn" onclick="selectOption('Cyber-Shinobi Tactical HUD')">
+          <span>Elegir Cyber-Shinobi HUD</span>
+          <span>→</span>
+        </button>
+      </div>
+
+      <!-- Opción 2: Zen Editorial -->
+      <div class="card">
+        <div class="card-kicker">ALTERNATIVA · ZEN</div>
+        <h2 class="card-title">Zen Editorial & Sello Imperial</h2>
+        <div class="card-lineage">Minimalismo editorial japonés contemporáneo</div>
+        <p class="card-thesis">
+          Elegancia pura inspirada en pergaminos contemporáneos: contrastes sobrios sobre carbón profundo, kanjis caligráficos vectoriales y acentos carmesí de sello imperial sin artificios.
+        </p>
+        
+        <div class="section-label">Paleta Cromática</div>
+        <div class="palette">
+          <div class="swatch" style="background: #121214;"><span class="swatch-hex">#121214</span></div>
+          <div class="swatch" style="background: #242429;"><span class="swatch-hex">#242429</span></div>
+          <div class="swatch" style="background: #E11D48;"><span class="swatch-hex">#E11D48</span></div>
+          <div class="swatch" style="background: #F5F5F0;"><span class="swatch-hex">#F5F5F0</span></div>
+        </div>
+
+        <div class="section-label" style="margin-top: 1.5rem;">Materiales & Texturas</div>
+        <div class="materials">
+          <span class="material-pill">Superficies mate sumi-e</span>
+          <span class="material-pill">Líneas de trazo fino</span>
+          <span class="material-pill">Sellos vectoriales en laca</span>
+        </div>
+
+        <div class="section-label">Composición de Viewport</div>
+        <div class="viewport-box">
+          Composición balanceada con amplio espacio negativo; el visor de cámara respira y los kanjis de activación se revelan con transiciones suaves y fluidas.
+        </div>
+
+        <div class="risk-box">
+          <strong>Riesgo a vigilar:</strong> Puede sentirse demasiado sobrio si el feedback de partículas no aporta la emoción necesaria.
+        </div>
+
+        <button class="action-btn" onclick="selectOption('Zen Editorial & Sello Imperial')">
+          <span>Elegir Zen Editorial</span>
+          <span>→</span>
+        </button>
+      </div>
+
+      <!-- Opción 3: Computer Vision Workbench -->
+      <div class="card">
+        <div class="card-kicker">ALTERNATIVA · TÉCNICA</div>
+        <h2 class="card-title">CV Engineering Suite</h2>
+        <div class="card-lineage">Instrumentación de visión artificial y telemetría</div>
+        <p class="card-thesis">
+          Enfoque técnico de alto impacto para reclutadores e ingenieros: telemetría en tiempo real (FPS, ángulos articulares de falanges y grafo de estados FSM interactivo en vivo).
+        </p>
+        
+        <div class="section-label">Paleta Cromática</div>
+        <div class="palette">
+          <div class="swatch" style="background: #0D1117;"><span class="swatch-hex">#0D1117</span></div>
+          <div class="swatch" style="background: #161B22;"><span class="swatch-hex">#161B22</span></div>
+          <div class="swatch" style="background: #10B981;"><span class="swatch-hex">#10B981</span></div>
+          <div class="swatch" style="background: #E6EDF3;"><span class="swatch-hex">#E6EDF3</span></div>
+        </div>
+
+        <div class="section-label" style="margin-top: 1.5rem;">Materiales & Texturas</div>
+        <div class="materials">
+          <span class="material-pill">Paneles biselados</span>
+          <span class="material-pill">Monitores de estado</span>
+          <span class="material-pill">Indicadores monocromáticos</span>
+        </div>
+
+        <div class="section-label">Composición de Viewport</div>
+        <div class="viewport-box">
+          Consola de control técnico con switch para visualizar esqueletos MediaPipe en vivo, métricas de confianza en la detección y banco de pruebas de combos.
+        </div>
+
+        <div class="risk-box">
+          <strong>Riesgo a vigilar:</strong> Mayor densidad de datos en pantalla; requiere pestañas o paneles colapsables.
+        </div>
+
+        <button class="action-btn" onclick="selectOption('CV Engineering Suite')">
+          <span>Elegir CV Suite</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Impeccable Decision Board · Naruto Jutsu Detector · Procesamiento en cliente con MediaPipe & WebGL Canvas
+    </div>
+  </div>
+
+  <script>
+    function selectOption(name) {
+      alert("Has seleccionado la dirección: " + name + "\\nPuedes confirmar en el chat de Antigravity.");
+    }
+  </script>
+</body>
+</html>
