@@ -77,6 +77,286 @@
           </div>
         </div>
       </div>
+
+      <!-- Dock Inferior: Los 12 Sellos Sagrados con Iconos SVG y Tooltip -->
+      <div class="seals-dock-container">
+        <div class="dock-header">
+          <div class="dock-title-group">
+            <span class="dock-title">Los 12 Sellos del Zodíaco Ninja</span>
+            <span class="dock-subtext">Pasa el cursor para ver la postura o haz el gesto ante la cámara:</span>
+          </div>
+          <span class="dock-status-hint">Detección interactiva</span>
+        </div>
+
+        <div class="dock-track" id="dock-track" role="region" aria-label="Los 12 Sellos">
+          <!-- 1. Pájaro (Tori) -->
+          <button class="dock-item" data-seal="TORI" type="button" aria-label="Sello Pájaro Tori">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M22 46 L18 36 L24 22 L32 10 L40 22 L46 36 L42 46 Z" />
+                <path d="M32 10 L32 26" />
+                <path d="M26 28 L32 34 L38 28" />
+                <path d="M22 36 C28 38 36 38 42 36" />
+                <path d="M14 44 L22 46 M50 44 L42 46" />
+              </svg>
+            </div>
+            <span class="dock-kanji">酉</span>
+            <span class="dock-name">Pájaro</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">酉</span>
+                <span class="tooltip-title">Pájaro · Tori</span>
+              </div>
+              <p class="tooltip-desc">Pulgares y meñiques erguidos en punta tocándose; dedos centrales entrelazados y plegados hacia dentro.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 2. Jabalí (I) -->
+          <button class="dock-item" data-seal="I" type="button" aria-label="Sello Jabalí I">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M18 14 L24 22 L24 44 C24 48 20 50 16 48 L14 44 L14 24 Z" />
+                <path d="M46 14 L40 22 L40 44 C40 48 44 50 48 48 L50 44 L50 24 Z" />
+                <path d="M24 28 C28 28 36 28 40 28" />
+                <path d="M24 36 C28 36 36 36 40 36" />
+                <path d="M24 44 L40 44" />
+              </svg>
+            </div>
+            <span class="dock-kanji">亥</span>
+            <span class="dock-name">Jabalí</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">亥</span>
+                <span class="tooltip-title">Jabalí · I</span>
+              </div>
+              <p class="tooltip-desc">Ambos puños cerrados enfrentados con muñecas arriba y nudillos apuntando hacia el frente/abajo.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 3. Perro (Inu) -->
+          <button class="dock-item" data-seal="INU" type="button" aria-label="Sello Perro Inu">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M12 24 L50 24 C52 24 54 26 52 28 L48 30 L12 30 Z" />
+                <line x1="22" y1="24" x2="22" y2="30" />
+                <line x1="32" y1="24" x2="32" y2="30" />
+                <line x1="42" y1="24" x2="42" y2="30" />
+                <path d="M16 32 L44 32 C46 32 48 35 46 44 C44 50 40 52 20 52 L16 48 Z" />
+                <path d="M22 36 L22 48 M30 36 L30 48 M38 36 L38 48" />
+              </svg>
+            </div>
+            <span class="dock-kanji">戌</span>
+            <span class="dock-name">Perro</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">戌</span>
+                <span class="tooltip-title">Perro · Inu</span>
+              </div>
+              <p class="tooltip-desc">Una mano con palma abierta y plana apoyada horizontalmente sobre el puño cerrado de la otra mano.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 4. Dragón (Tatsu) -->
+          <button class="dock-item" data-seal="TATSU" type="button" aria-label="Sello Dragón Tatsu">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M32 10 L26 22 L20 34 L32 54 L44 34 L38 22 Z" />
+                <line x1="32" y1="10" x2="32" y2="24" />
+                <path d="M26 26 L38 38 M38 26 L26 38" />
+                <line x1="32" y1="42" x2="32" y2="54" />
+              </svg>
+            </div>
+            <span class="dock-kanji">辰</span>
+            <span class="dock-name">Dragón</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">辰</span>
+                <span class="tooltip-title">Dragón · Tatsu</span>
+              </div>
+              <p class="tooltip-desc">Dedos cruzados formando un rombo o caja hueca, con los pulgares apuntando erguidos hacia arriba.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 5. Liebre (U) -->
+          <button class="dock-item" data-seal="U" type="button" aria-label="Sello Liebre U">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M28 12 L34 12 C35 12 36 14 36 26 L52 26 C55 26 56 29 54 32 L50 34 L36 34 L36 46 C36 49 32 50 26 48 L22 46 L22 26 C22 18 24 12 28 12 Z" />
+                <path d="M26 36 L36 36 M26 42 L36 42" />
+              </svg>
+            </div>
+            <span class="dock-kanji">卯</span>
+            <span class="dock-name">Liebre</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">卯</span>
+                <span class="tooltip-title">Liebre · U</span>
+              </div>
+              <p class="tooltip-desc">Mano en forma de pistola: pulgar apuntando hacia arriba (90°) e índice extendido hacia el frente.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 6. Caballo (Uma) -->
+          <button class="dock-item" data-seal="UMA" type="button" aria-label="Sello Caballo Uma">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M32 12 L20 32 L16 46 L24 48 L28 36 L32 24 L36 36 L40 48 L48 46 L44 32 Z" />
+                <path d="M28 36 L36 36" />
+                <circle cx="32" cy="12" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <span class="dock-kanji">午</span>
+            <span class="dock-name">Caballo</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">午</span>
+                <span class="tooltip-title">Caballo · Uma</span>
+              </div>
+              <p class="tooltip-desc">Los dos dedos índices forman una tienda triangular apuntando al cielo; dedos restantes doblados.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 7. Mono (Saru) -->
+          <button class="dock-item" data-seal="SARU" type="button" aria-label="Sello Mono Saru">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M12 24 L52 24 C55 24 56 26 54 29 L50 30 L12 30 Z" />
+                <path d="M14 34 L48 34 C51 34 52 36 50 39 L46 40 L14 40 Z" />
+                <line x1="24" y1="24" x2="24" y2="30" />
+                <line x1="34" y1="24" x2="34" y2="30" />
+                <line x1="26" y1="34" x2="26" y2="40" />
+                <line x1="36" y1="34" x2="36" y2="40" />
+              </svg>
+            </div>
+            <span class="dock-kanji">申</span>
+            <span class="dock-name">Mono</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">申</span>
+                <span class="tooltip-title">Mono · Saru</span>
+              </div>
+              <p class="tooltip-desc">Ambas manos extendidas horizontalmente con los dedos planos paralelos entre sí.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 8. Buey (Ushi) -->
+          <button class="dock-item" data-seal="USHI" type="button" aria-label="Sello Buey Ushi">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M14 34 L48 34 L46 42 L14 42 Z" />
+                <path d="M26 14 L30 34" />
+                <path d="M36 16 L28 34" />
+                <path d="M30 42 L30 52 C30 54 36 54 36 52 L36 42" />
+              </svg>
+            </div>
+            <span class="dock-kanji">丑</span>
+            <span class="dock-name">Buey</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">丑</span>
+                <span class="tooltip-title">Buey · Ushi</span>
+              </div>
+              <p class="tooltip-desc">Una mano extendida horizontal y la otra mano cruzando los dedos índice y medio hacia arriba.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 9. Carnero (Hitsuji) -->
+          <button class="dock-item" data-seal="HITSUJI" type="button" aria-label="Sello Carnero Hitsuji">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M28 10 L32 10 L32 34 L28 34 Z" />
+                <path d="M33 10 L37 10 L37 34 L33 34 Z" />
+                <path d="M20 34 L45 34 C48 34 50 38 48 46 C46 52 38 54 26 54 C18 54 16 48 18 42 Z" />
+                <path d="M24 38 C28 40 36 40 40 38" />
+              </svg>
+            </div>
+            <span class="dock-kanji">未</span>
+            <span class="dock-name">Carnero</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">未</span>
+                <span class="tooltip-title">Carnero · Hitsuji</span>
+              </div>
+              <p class="tooltip-desc">Dedos índice y medio de ambas manos erguidos hacia arriba en paralelo; dedos restantes replegados.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 10. Rata (Ne) -->
+          <button class="dock-item" data-seal="NE" type="button" aria-label="Sello Rata Ne">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M30 10 L34 10 L34 26 L30 26 Z" />
+                <path d="M35 12 L39 12 L39 26 L35 26 Z" />
+                <path d="M22 26 L44 26 C48 26 50 30 48 44 C46 52 38 54 26 54 C18 54 18 46 20 38 Z" />
+                <path d="M22 32 C28 34 38 34 44 32" />
+                <path d="M22 40 C28 42 38 42 44 40" />
+              </svg>
+            </div>
+            <span class="dock-kanji">子</span>
+            <span class="dock-name">Rata</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">子</span>
+                <span class="tooltip-title">Rata · Ne</span>
+              </div>
+              <p class="tooltip-desc">Dedos índice y medio de una mano erguidos, firmemente envueltos por la otra mano en puño.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 11. Serpiente (Mi) -->
+          <button class="dock-item" data-seal="MI" type="button" aria-label="Sello Serpiente Mi">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M32 14 L24 26 L22 46 L32 54 L42 46 L40 26 Z" />
+                <path d="M28 22 L36 30 M36 22 L28 30" />
+                <path d="M26 34 L38 42 M38 34 L26 42" />
+              </svg>
+            </div>
+            <span class="dock-kanji">巳</span>
+            <span class="dock-name">Serpiente</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">巳</span>
+                <span class="tooltip-title">Serpiente · Mi</span>
+              </div>
+              <p class="tooltip-desc">Ambas manos unidas en rezo firme con los dedos entrelazados fuertemente y pulgares arriba.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+
+          <!-- 12. Tigre (Tora) -->
+          <button class="dock-item" data-seal="TORA" type="button" aria-label="Sello Tigre Tora">
+            <div class="dock-svg-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-seal-svg" aria-hidden="true">
+                <path d="M30 8 L34 8 L34 32 L30 32 Z" />
+                <path d="M20 32 L44 32 C48 32 50 36 48 46 C46 54 38 56 26 56 C18 56 16 50 18 42 Z" />
+                <path d="M22 38 C28 40 36 40 42 38" />
+                <path d="M22 46 C28 48 36 48 42 46" />
+              </svg>
+            </div>
+            <span class="dock-kanji">寅</span>
+            <span class="dock-name">Tigre</span>
+            <div class="dock-tooltip" role="tooltip">
+              <div class="tooltip-head">
+                <span class="tooltip-kanji">寅</span>
+                <span class="tooltip-title">Tigre · Tora</span>
+              </div>
+              <p class="tooltip-desc">Ambos índices rectos apuntando al cielo juntos; los demás dedos cruzados en puño compacto.</p>
+              <span class="tooltip-action">Clic para simular</span>
+            </div>
+          </button>
+        </div>
+      </div>
     </section>
 
     <!-- Guía Lateral: Los 12 Sellos y Técnicas -->

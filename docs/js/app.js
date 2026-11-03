@@ -380,11 +380,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function updateSealTilesHighlight(activeSeal) {
-    document.querySelectorAll('.seal-tile').forEach(tile => {
-      if (activeSeal && tile.dataset.seal === activeSeal) {
-        tile.classList.add('active');
+    document.querySelectorAll('.seal-tile, .dock-item').forEach(el => {
+      if (activeSeal && el.dataset.seal === activeSeal) {
+        el.classList.add('active');
       } else {
-        tile.classList.remove('active');
+        el.classList.remove('active');
       }
     });
   }
@@ -411,11 +411,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Clic interactivo en los 12 sellos para simulación / prueba directa
-  const sealTiles = document.querySelectorAll('.seal-tile');
-  sealTiles.forEach(tile => {
-    tile.addEventListener('click', () => {
-      const seal = tile.dataset.seal;
+  // Clic interactivo en los 12 sellos (barra lateral y dock inferior) para simulación / prueba directa
+  const interactiveSealElements = document.querySelectorAll('.seal-tile, .dock-item');
+  interactiveSealElements.forEach(el => {
+    el.addEventListener('click', () => {
+      const seal = el.dataset.seal;
       if (!seal) return;
 
       updateSealTilesHighlight(seal);
