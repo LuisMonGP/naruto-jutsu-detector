@@ -274,6 +274,34 @@ document.addEventListener('DOMContentLoaded', () => {
         slot.classList.remove('active');
       }
     });
+
+    // Actualizar badges numéricos de combo en el dock y sugerencia del siguiente sello
+    document.querySelectorAll('.dock-item').forEach(item => {
+      item.classList.remove('confirmed', 'suggested-next');
+      const badge = item.querySelector('.dock-combo-badge');
+      if (badge) badge.textContent = '';
+    });
+
+    comboHistory.forEach((item, idx) => {
+      const dockEl = document.querySelector(`.dock-item[data-seal="${item.seal}"]`);
+      if (dockEl) {
+        dockEl.classList.add('confirmed');
+        const badge = dockEl.querySelector('.dock-combo-badge');
+        if (badge) badge.textContent = (idx + 1).toString();
+      }
+    });
+
+    // Predecir y resaltar el siguiente sello esperado para Katon o Chidori
+    const seqStr = comboHistory.map(i => i.seal).join(',');
+    let nextSeal = null;
+    if (seqStr === 'MI') nextSeal = 'HITSUJI';
+    else if (seqStr === 'MI,HITSUJI') nextSeal = 'TORA';
+    else if (seqStr === 'TORA') nextSeal = 'HITSUJI';
+
+    if (nextSeal) {
+      const nextEl = document.querySelector(`.dock-item[data-seal="${nextSeal}"]`);
+      if (nextEl) nextEl.classList.add('suggested-next');
+    }
   }
 
   function checkJutsuActivation() {
@@ -409,6 +437,35 @@ document.addEventListener('DOMContentLoaded', () => {
       viewJutsus.classList.remove('hidden');
       viewSeals.classList.add('hidden');
     });
+  }
+
+  // Filtros de Jutsus en Dock
+  const filterChips = document.querySelectorAll('.filter-chip');
+  const jutsuSealMap = {
+    'KATON': ['MI', 'HITSUJI', 'TORA', 'UMA'],
+    'CHIDORI': ['TORA', 'HITSUJI', 'INU', 'SARU', 'U']
+  };
+
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const filter = chip.dataset.filter;
+
+      document.querySelectorAll('.dock-item').forEach(item => {
+        const seal = item.dataset.seal;
+        if (filter === 'ALL' || (jutsuSealMap[filter] && jutsuSealMap[filter].includes(seal))) {
+          item.classList.remove('dimmed');
+        } else {
+          item.classList.add('dimmed');
+        }
+      });
+    });
+  });
+
+  const dockStatusText = document.getElementById('dock-status-text');
+  function updateDockStatus(text) {
+    if (dockStatusText) dockStatusText.textContent = text;
   }
 
   // Clic interactivo en los 12 sellos (barra lateral y dock inferior) para simulación / prueba directa
@@ -624,13 +681,16 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSealTilesHighlight(currentDetectedSeal);
 
         if (!activeJutsu) {
-          currentSealEl.textContent = sealNamesMap[currentDetectedSeal] || 'Mano activa';
+          const sealLabel = sealNamesMap[currentDetectedSeal] || 'Mano activa';
+          currentSealEl.textContent = sealLabel;
+          updateDockStatus(currentDetectedSeal !== 'NONE' ? `Detectado: ${sealLabel}` : 'Mano en cámara');
         }
       } else {
         currentDetectedSeal = 'NONE';
         updateSealTilesHighlight(null);
         if (!activeJutsu) {
           currentSealEl.textContent = 'Buscando manos...';
+          updateDockStatus('Buscando manos...');
         }
       }
     });
