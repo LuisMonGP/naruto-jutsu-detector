@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naruto Jutsu Detector | Real-Time Computer Vision & WebGL VFX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;700&family=Shojumaru&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- HUD Superior -->
+  <header class="hud-header">
+    <div class="hud-brand">
+      <span class="chakra-flame"></span>
+      <span class="hud-title">NARUTO JUTSU DETECTOR</span>
+      <span class="hud-pill">60 FPS · WebGL Canvas & MediaPipe</span>
+    </div>
+    <div class="hud-actions">
+      <a href="https://github.com/LuisMonGP/naruto-jutsu-detector" target="_blank" class="hud-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub Repo
+      </a>
+      <a href="https://portfoliochess.pages.dev" target="_blank" class="hud-btn chess-btn">
+        ♟ PortfolioChess
+      </a>
+    </div>
+  </header>
+
+  <main class="ninja-arena">
+    <!-- Contenedor de Video y Canvas VFX Superpuesto -->
+    <div class="camera-viewport">
+      <video id="webcam" playsinline muted autoplay></video>
+      <canvas id="output-canvas"></canvas>
+
+      <!-- Mensaje de inicio / permisos de cámara -->
+      <div id="start-overlay" class="overlay-modal">
+        <div class="modal-card">
+          <div class="shinobi-icon">忍</div>
+          <h2>Detector de Jutsus en Vivo</h2>
+          <p>Permite el acceso a tu cámara web para detectar los sellos de tus manos en tiempo real mediante visión por computadora.</p>
+          <div class="privacy-note">🔒 100% Privado: Todo el cómputo se procesa localmente en tu GPU/navegador. Ninguna imagen sale de tu equipo.</div>
+          <button id="start-btn" class="shinobi-btn">ACTIVAR CÁMARA & CHAKRA</button>
+        </div>
+      </div>
+
+      <!-- Banner de Jutsu Desatado -->
+      <div id="jutsu-banner" class="jutsu-banner hidden">
+        <div class="jutsu-kanji" id="banner-kanji">火遁·豪火球の術</div>
+        <div class="jutsu-name" id="banner-name">KATON: GŌKAKYŪ NO JUTSU</div>
+      </div>
+
+      <!-- Indicador de Sello Actual -->
+      <div class="seal-telemetry">
+        <div class="seal-badge">
+          <span class="label">SELLO ACTUAL:</span>
+          <span class="value" id="current-seal">Buscando Manos...</span>
+        </div>
+        <div class="combo-sequence" id="combo-bar">
+          <span class="combo-label">COMBO:</span>
+          <div class="combo-slots" id="combo-slots">
+            <span class="slot empty"></span>
+            <span class="slot empty"></span>
+            <span class="slot empty"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Lateral: Guía de Sellos y Simulador de Prueba -->
+    <aside class="ninja-guide">
+      <div class="guide-card">
+        <h3>Pergamino de Técnicas (Jutsus)</h3>
+        
+        <div class="jutsu-recipe">
+          <div class="recipe-header">
+            <strong>🔥 Katon: Gōkakyū no Jutsu</strong>
+            <span class="tag tag-fire">Elemento Fuego</span>
+          </div>
+          <p class="recipe-desc">Secuencia de sellos: <code>Serpiente (Mi)</code> ➔ <code>Carnero (Hitsuji)</code> ➔ <code>Tigre (Tora)</code></p>
+          <button class="test-trigger" data-jutsu="KATON">Simular Jutsu de Fuego</button>
+        </div>
+
+        <div class="jutsu-recipe">
+          <div class="recipe-header">
+            <strong>⚡ Chidori (Millar de Aves)</strong>
+            <span class="tag tag-lightning">Elemento Rayo</span>
+          </div>
+          <p class="recipe-desc">Secuencia de sellos: <code>Tigre (Tora)</code> ➔ <code>Carnero (Hitsuji)</code></p>
+          <button class="test-trigger" data-jutsu="CHIDORI">Simular Chidori</button>
+        </div>
+
+        <div class="jutsu-recipe">
+          <div class="recipe-header">
+            <strong>🌀 Rasengan</strong>
+            <span class="tag tag-chakra">Control de Chakra</span>
+          </div>
+          <p class="recipe-desc">Postura: <code>Palma Abierta</code> con mano orientada al frente.</p>
+          <button class="test-trigger" data-jutsu="RASENGAN">Simular Rasengan</button>
+        </div>
+
+        <div class="jutsu-recipe">
+          <div class="recipe-header">
+            <strong>👥 Kage Bunshin no Jutsu</strong>
+            <span class="tag tag-clone">Clones de Sombra</span>
+          </div>
+          <p class="recipe-desc">Postura: <code>Sello de Cruz</code> con dedos índices y medios cruzados.</p>
+          <button class="test-trigger" data-jutsu="KAGE_BUNSHIN">Simular Clones de Sombra</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

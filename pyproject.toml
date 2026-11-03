@@ -1,0 +1,19 @@
+[project]
+name = "naruto-jutsu-detector"
+version = "1.0.0"
+description = "Detector de Sellos y Jutsus de Naruto en Tiempo Real con Visión por Computadora (OpenCV, MediaPipe y WebGL a 60 FPS)"
+authors = [
+    { name = "Luis Monge", email = "monjeje2028@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "opencv-python>=4.9.0",
+    "mediapipe>=0.10.11",
+    "numpy>=1.26.0",
+    "pytest>=8.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
