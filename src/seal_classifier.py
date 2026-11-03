@@ -32,8 +32,14 @@ class SealClassifier:
         angulos_mano1: Dict[str, float],
         angulos_mano2: Optional[Dict[str, float]] = None,
         distancia_manos: float = 1.0,
+        orientacion_mano1: str = "UPRIGHT",
+        orientacion_mano2: Optional[str] = None,
     ) -> Tuple[str, float]:
-        """Determina el sello presente según la configuración angular y proximidad de ambas manos."""
+        """Determina el sello presente según la configuración angular, proximidad y orientación espacial de las manos."""
+
+        # Descarte de poses boca abajo / invertidas hacia el suelo
+        if orientacion_mano1 == "DOWN" or (orientacion_mano2 is not None and orientacion_mano2 == "DOWN"):
+            return "NONE", 0.20
 
         # -------------------------------------------------------------
         # 1. GESTOS A DOS MANOS (Prioridad cuando ambas manos están juntas)
@@ -48,11 +54,11 @@ class SealClassifier:
             ):
                 return "KAGE_BUNSHIN_CROSS", 0.95
 
-            # Perro (Inu): Una mano abierta plana sobre un puño cerrado
+            # Perro (Inu): Una mano abierta plana sobre un puño cerrado (la mano abierta descansa preferentemente horizontal)
             mano1_abierta = all(angulos_mano1.get(d, 0) > 130 for d in ["index", "middle", "ring", "pinky"])
             mano2_cerrada = all(angulos_mano2.get(d, 0) < 110 for d in ["index", "middle", "ring", "pinky"])
             mano2_abierta = all(angulos_mano2.get(d, 0) > 130 for d in ["index", "middle", "ring", "pinky"])
-            mano1_cerrada = all(angulos_mano1.get(d, 0) < 110 for d in ["index", "middle", "ring", "pinky"])
+            mano1_cerrada = all(angulos_mano2.get(d, 0) < 110 for d in ["index", "middle", "ring", "pinky"])
 
             if (mano1_abierta and mano2_cerrada) or (mano2_abierta and mano1_cerrada):
                 return "INU", 0.93
@@ -64,18 +70,20 @@ class SealClassifier:
             ):
                 return "I", 0.92
 
-            # Pájaro (Tori): Pulgares y meñiques extendidos, dedos centrales plegados
+            # Pájaro (Tori): Pulgares y meñiques erguidos hacia arriba, dedos centrales plegados
             if (
-                angulos_mano1.get("pinky", 0) > 125
+                orientacion_mano1 == "UPRIGHT" and (orientacion_mano2 is None or orientacion_mano2 == "UPRIGHT")
+                and angulos_mano1.get("pinky", 0) > 125
                 and angulos_mano2.get("pinky", 0) > 125
                 and angulos_mano1.get("middle", 0) < 120
                 and angulos_mano2.get("middle", 0) < 120
             ):
                 return "TORI", 0.90
 
-            # Caballo (Uma): Índices en tienda triangular, dedos restantes plegados
+            # Caballo (Uma): Índices en tienda triangular erguida hacia arriba, dedos restantes plegados
             if (
-                angulos_mano1.get("index", 0) > 140
+                orientacion_mano1 == "UPRIGHT" and (orientacion_mano2 is None or orientacion_mano2 == "UPRIGHT")
+                and angulos_mano1.get("index", 0) > 140
                 and angulos_mano2.get("index", 0) > 140
                 and angulos_mano1.get("middle", 0) < 110
                 and angulos_mano2.get("middle", 0) < 110
@@ -83,9 +91,10 @@ class SealClassifier:
             ):
                 return "UMA", 0.88
 
-            # Rata (Ne): Mano derecha con índice/medio erguidos envuelta por la izquierda
+            # Rata (Ne): Mano derecha con índice/medio erguidos hacia arriba envuelta por la izquierda
             if (
-                angulos_mano1.get("index", 0) > 140
+                orientacion_mano1 == "UPRIGHT"
+                and angulos_mano1.get("index", 0) > 140
                 and angulos_mano1.get("middle", 0) > 140
                 and angulos_mano1.get("ring", 0) < 105
                 and all(angulos_mano2.get(d, 0) < 120 for d in ["middle", "ring", "pinky"])
@@ -101,9 +110,10 @@ class SealClassifier:
             ):
                 return "USHI", 0.88
 
-            # Carnero (Hitsuji): Índices y medios erguidos juntos en paralelo
+            # Carnero (Hitsuji): Índices y medios erguidos hacia arriba juntos en paralelo
             if (
-                angulos_mano1.get("index", 0) > 145
+                orientacion_mano1 == "UPRIGHT" and (orientacion_mano2 is None or orientacion_mano2 == "UPRIGHT")
+                and angulos_mano1.get("index", 0) > 145
                 and angulos_mano1.get("middle", 0) > 145
                 and angulos_mano2.get("index", 0) > 140
                 and angulos_mano2.get("middle", 0) > 140
@@ -111,9 +121,10 @@ class SealClassifier:
             ):
                 return "HITSUJI", 0.94
 
-            # Tigre (Tora): Índices erguidos hacia arriba juntos
+            # Tigre (Tora): Índices erguidos estrictamente hacia arriba juntos
             if (
-                angulos_mano1.get("index", 0) > 145
+                orientacion_mano1 == "UPRIGHT" and (orientacion_mano2 is None or orientacion_mano2 == "UPRIGHT")
+                and angulos_mano1.get("index", 0) > 145
                 and angulos_mano2.get("index", 0) > 140
                 and angulos_mano1.get("ring", 0) < 105
                 and angulos_mano2.get("ring", 0) < 105
@@ -135,13 +146,14 @@ class SealClassifier:
         # -------------------------------------------------------------
         # 2. GESTOS UNIMANUALES O STANDALONE
         # -------------------------------------------------------------
-        # Palma Abierta (Rasengan): los 5 dedos extendidos
+        # Palma Abierta (Rasengan): los 5 dedos extendidos (no boca abajo)
         if all(angulos_mano1.get(d, 0) > 138 for d in ["thumb", "index", "middle", "ring", "pinky"]):
             return "OPEN_PALM", 0.96
 
-        # Carnero unimanual: Índices y medios rectos
+        # Carnero unimanual: Índices y medios rectos hacia arriba
         if (
-            angulos_mano1.get("index", 0) > 145
+            orientacion_mano1 == "UPRIGHT"
+            and angulos_mano1.get("index", 0) > 145
             and angulos_mano1.get("middle", 0) > 145
             and angulos_mano1.get("pinky", 0) < 100
         ):
@@ -157,9 +169,10 @@ class SealClassifier:
         ):
             return "U", 0.91
 
-        # Tigre unimanual: Solo índice erguido, pulgar y demás replegados
+        # Tigre unimanual: Solo índice erguido estrictamente hacia arriba
         if (
-            angulos_mano1.get("index", 0) > 145
+            orientacion_mano1 == "UPRIGHT"
+            and angulos_mano1.get("index", 0) > 145
             and angulos_mano1.get("middle", 0) < 100
             and angulos_mano1.get("ring", 0) < 100
             and angulos_mano1.get("pinky", 0) < 100

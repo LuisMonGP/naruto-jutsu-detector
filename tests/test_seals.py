@@ -90,3 +90,51 @@ def test_clasificacion_sello_kage_bunshin():
     assert sello == "KAGE_BUNSHIN_CROSS"
     assert conf >= 0.90
 
+
+def test_orientacion_espacial_tracker():
+    tracker = HandTracker()
+    # Muñeca en (0.5, 0.5)
+    # 1. Mano erguida vertical (P9 más arriba, Y menor): (0.5, 0.2)
+    landmarks_up = np.zeros((21, 3))
+    landmarks_up[0] = [0.5, 0.5, 0.0]
+    landmarks_up[9] = [0.5, 0.2, 0.0]
+    assert tracker.calcular_orientacion(landmarks_up) == "UPRIGHT"
+
+    # 2. Mano boca abajo (P9 más abajo, Y mayor): (0.5, 0.8)
+    landmarks_down = np.zeros((21, 3))
+    landmarks_down[0] = [0.5, 0.5, 0.0]
+    landmarks_down[9] = [0.5, 0.8, 0.0]
+    assert tracker.calcular_orientacion(landmarks_down) == "DOWN"
+
+    # 3. Mano horizontal (P9 hacia la derecha): (0.8, 0.5)
+    landmarks_horiz = np.zeros((21, 3))
+    landmarks_horiz[0] = [0.5, 0.5, 0.0]
+    landmarks_horiz[9] = [0.8, 0.5, 0.0]
+    assert tracker.calcular_orientacion(landmarks_horiz) == "HORIZONTAL"
+
+
+def test_diferenciacion_orientacion_tigre_horizontal_y_boca_abajo():
+    classifier = SealClassifier()
+    # Misma configuración angular de Tigre (índice erguido, demás plegados)
+    angulos = {
+        "thumb": 90.0,
+        "index": 170.0,
+        "middle": 80.0,
+        "ring": 70.0,
+        "pinky": 65.0,
+    }
+
+    # 1. Vertical hacia arriba (UPRIGHT) -> Sello Tigre Válido
+    sello_up, conf_up = classifier.clasificar(angulos, orientacion_mano1="UPRIGHT")
+    assert sello_up == "TORA"
+    assert conf_up >= 0.80
+
+    # 2. Horizontal -> NO debe ser Tigre (debe retornar NONE)
+    sello_horiz, conf_horiz = classifier.clasificar(angulos, orientacion_mano1="HORIZONTAL")
+    assert sello_horiz == "NONE"
+
+    # 3. Boca abajo (DOWN) -> NO debe ser Tigre (rechazado como NONE)
+    sello_down, conf_down = classifier.clasificar(angulos, orientacion_mano1="DOWN")
+    assert sello_down == "NONE"
+
+

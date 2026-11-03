@@ -819,42 +819,48 @@ body {
   transform: translateY(-1px);
 }
 
-/* Tooltip Enriquecido Horizontal */
-.dock-tooltip {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
+/* Tooltip Flotante Global (Desacoplado de overflow-x: auto) */
+.dock-floating-tooltip {
+  position: fixed;
+  left: 0;
+  top: 0;
   transform: translate(-50%, 6px);
-  opacity: 0;
-  pointer-events: none;
+  width: 290px;
   background: #0f172a;
   color: #ffffff;
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid #334155;
-  width: 280px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
-  z-index: 100;
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 9999;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
   text-align: left;
 }
 
-.dock-tooltip::after {
+.dock-floating-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.dock-floating-tooltip::after {
   content: '';
   position: absolute;
   top: 100%;
-  left: 50%;
+  left: calc(50% + var(--arrow-offset, 0px));
   transform: translateX(-50%);
   border-width: 6px;
   border-style: solid;
   border-color: #0f172a transparent transparent transparent;
 }
 
-.dock-item:hover .dock-tooltip,
-.dock-item:focus-visible .dock-tooltip {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate(-50%, 0);
+.dock-floating-tooltip[data-placement="bottom"]::after {
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent #0f172a transparent;
 }
 
 /* Disposición interior del tooltip */
@@ -943,43 +949,6 @@ body {
   display: block;
 }
 
-/* Evitar desborde en extremos laterales */
-.dock-item:first-child .dock-tooltip,
-.dock-item:nth-child(2) .dock-tooltip {
-  left: 0;
-  transform: translate(0, 6px);
-}
-
-.dock-item:first-child .dock-tooltip::after,
-.dock-item:nth-child(2) .dock-tooltip::after {
-  left: 36px;
-}
-
-.dock-item:first-child:hover .dock-tooltip,
-.dock-item:nth-child(2):hover .dock-tooltip,
-.dock-item:first-child:focus-visible .dock-tooltip,
-.dock-item:nth-child(2):focus-visible .dock-tooltip {
-  transform: translate(0, 0);
-}
-
-.dock-item:last-child .dock-tooltip,
-.dock-item:nth-last-child(2) .dock-tooltip {
-  left: auto;
-  right: 0;
-  transform: translate(0, 6px);
-}
-
-.dock-item:last-child .dock-tooltip::after,
-.dock-item:nth-last-child(2) .dock-tooltip::after {
-  left: auto;
-  right: 36px;
-}
-
-.dock-item:last-child:hover .dock-tooltip,
-.dock-item:nth-last-child(2):hover .dock-tooltip,
-.dock-item:last-child:focus-visible .dock-tooltip,
-.dock-item:nth-last-child(2):focus-visible .dock-tooltip {
-  transform: translate(0, 0);
-}
+/* Posicionamiento dinámico manejado por el Tooltip Flotante Global con clamp horizontal */
 
 

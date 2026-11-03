@@ -82,3 +82,40 @@ class HandTracker:
             angulos[dedo] = float(np.degrees(np.arccos(cos_theta)))
 
         return angulos
+
+    def calcular_orientacion(self, landmarks_3d: np.ndarray) -> str:
+        """Determina la orientación espacial de la mano ('UPRIGHT', 'HORIZONTAL' o 'DOWN').
+
+        En el sistema de coordenadas de MediaPipe, Y=0 está arriba y Y=1 abajo.
+        Por tanto, un vector de muñeca a nudillo con dy < 0 apunta hacia arriba (cielo/pecho).
+
+        Args:
+            landmarks_3d: Arreglo (21, 3).
+
+        Returns:
+            str: 'UPRIGHT' (vertical erguida), 'HORIZONTAL' (lateral) o 'DOWN' (boca abajo/invertida).
+        """
+        if landmarks_3d.shape != (21, 3):
+            raise ValueError(f"Se esperaban dimensiones (21, 3), recibido {landmarks_3d.shape}")
+
+        # Vector principal: muñeca (0) -> base del dedo medio (9)
+        dx = float(landmarks_3d[9, 0] - landmarks_3d[0, 0])
+        dy = float(landmarks_3d[9, 1] - landmarks_3d[0, 1])
+
+        norm = np.hypot(dx, dy)
+        if norm < 1e-6:
+            return "UPRIGHT"
+
+        angulo_grados = float(np.degrees(np.arctan2(dy, dx)))
+
+        # Apuntando al cielo (-90° es estrictamente hacia arriba en coordenadas de pantalla)
+        if -140.0 <= angulo_grados <= -40.0:
+            return "UPRIGHT"
+
+        # Apuntando al suelo (+90° es estrictamente hacia abajo)
+        if 40.0 <= angulo_grados <= 140.0:
+            return "DOWN"
+
+        # Predominio horizontal (lateral)
+        return "HORIZONTAL"
+

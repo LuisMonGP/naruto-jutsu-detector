@@ -81,13 +81,46 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
+  // Clasificador de Orientación Espacial de la Mano (UPRIGHT, HORIZONTAL o DOWN)
+  function getHandOrientation(landmarks) {
+    if (!landmarks || landmarks.length < 21) return "UPRIGHT";
+    // Vector de muñeca (0) a base del dedo medio (9)
+    const dx = landmarks[9].x - landmarks[0].x;
+    const dy = landmarks[9].y - landmarks[0].y;
+    const norm = Math.hypot(dx, dy);
+    if (norm < 1e-5) return "UPRIGHT";
+
+    const angleDeg = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    // En coordenadas de pantalla: Y crece hacia abajo.
+    // Apuntando hacia arriba (cielo / pecho): dy < 0, ángulo entre -140° y -40°
+    if (angleDeg >= -140 && angleDeg <= -40) {
+      return "UPRIGHT";
+    }
+
+    // Apuntando hacia abajo (suelo / boca abajo): dy > 0, ángulo entre +40° y +140°
+    if (angleDeg >= 40 && angleDeg <= 140) {
+      return "DOWN";
+    }
+
+    // Predominio horizontal / lateral
+    return "HORIZONTAL";
+  }
+
   function classifyHandSeals(handsList) {
     if (!handsList || handsList.length === 0) return "NONE";
 
     const hand1 = handsList[0];
     const angles1 = getFingerAngles(hand1);
+    const orient1 = getHandOrientation(hand1);
     const hand2 = handsList[1] || null;
     const angles2 = hand2 ? getFingerAngles(hand2) : null;
+    const orient2 = hand2 ? getHandOrientation(hand2) : null;
+
+    // Descarte inmediato si las manos apuntan al suelo (boca abajo / invertido)
+    if (orient1 === "DOWN" || (orient2 && orient2 === "DOWN")) {
+      return "NONE";
+    }
 
     let distBetweenWrists = 1.0;
     if (hand2) {
@@ -126,16 +159,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return "I";
       }
 
-      // Pájaro (Tori): Pulgares y meñiques extendidos, dedos centrales plegados
+      // Pájaro (Tori): Pulgares y meñiques erguidos hacia arriba, dedos centrales plegados
       if (
+        orient1 === "UPRIGHT" && orient2 === "UPRIGHT" &&
         angles1.pinky > 125 && angles2.pinky > 125 &&
         angles1.middle < 120 && angles2.middle < 120
       ) {
         return "TORI";
       }
 
-      // Caballo (Uma): Índices en tienda triangular, dedos restantes plegados
+      // Caballo (Uma): Índices en tienda triangular erguida hacia arriba, dedos restantes plegados
       if (
+        orient1 === "UPRIGHT" && orient2 === "UPRIGHT" &&
         angles1.index > 140 && angles2.index > 140 &&
         angles1.middle < 110 && angles2.middle < 110 &&
         angles1.pinky < 100
@@ -143,8 +178,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return "UMA";
       }
 
-      // Rata (Ne): Índice y medio erguidos envueltos por la otra mano
+      // Rata (Ne): Índice y medio erguidos hacia arriba envueltos por la otra mano
       if (
+        orient1 === "UPRIGHT" &&
         angles1.index > 140 && angles1.middle > 140 && angles1.ring < 105 &&
         angles2.middle < 120 && angles2.ring < 120 && angles2.pinky < 120
       ) {
@@ -159,8 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return "USHI";
       }
 
-      // Carnero (Hitsuji): Índices y medios rectos juntos en paralelo
+      // Carnero (Hitsuji): Índices y medios erguidos hacia arriba juntos en paralelo
       if (
+        orient1 === "UPRIGHT" && orient2 === "UPRIGHT" &&
         angles1.index > 145 && angles1.middle > 145 &&
         angles2.index > 140 && angles2.middle > 140 &&
         angles1.pinky < 105
@@ -168,8 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return "HITSUJI";
       }
 
-      // Tigre (Tora): Índices erguidos hacia arriba juntos
+      // Tigre (Tora): Índices erguidos estrictamente hacia arriba juntos
       if (
+        orient1 === "UPRIGHT" && orient2 === "UPRIGHT" &&
         angles1.index > 145 && angles2.index > 140 &&
         angles1.ring < 105 && angles2.ring < 105
       ) {
@@ -205,8 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return "OPEN_PALM";
     }
 
-    // Carnero unimanual: Índices y medios rectos
+    // Carnero unimanual: Índices y medios rectos hacia arriba
     if (
+      orient1 === "UPRIGHT" &&
       angles1.index > 145 &&
       angles1.middle > 145 &&
       angles1.pinky < 100
@@ -225,8 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return "U";
     }
 
-    // Tigre unimanual: Solo índice erguido, los demás replegados
+    // Tigre unimanual: Solo índice erguido estrictamente hacia arriba
     if (
+      orient1 === "UPRIGHT" &&
       angles1.index > 145 &&
       angles1.middle < 100 &&
       angles1.ring < 100 &&
@@ -800,4 +840,82 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   requestAnimationFrame(renderLoop);
+
+  // ==========================================
+  // TOOLTIP FLOTANTE GLOBAL DESACOPLADO
+  // ==========================================
+  const globalTooltip = document.getElementById('dock-global-tooltip');
+  const tooltipBody = globalTooltip ? globalTooltip.querySelector('.floating-tooltip-body') : null;
+  const dockItemsList = document.querySelectorAll('.dock-item');
+
+  function showDockTooltip(item) {
+    if (!globalTooltip || !tooltipBody) return;
+    const content = item.querySelector('.dock-tooltip-content');
+    if (!content) return;
+
+    tooltipBody.innerHTML = content.innerHTML;
+    globalTooltip.classList.add('visible');
+    globalTooltip.setAttribute('aria-hidden', 'false');
+
+    positionDockTooltip(item);
+  }
+
+  function hideDockTooltip() {
+    if (!globalTooltip) return;
+    globalTooltip.classList.remove('visible');
+    globalTooltip.setAttribute('aria-hidden', 'true');
+  }
+
+  function positionDockTooltip(item) {
+    if (!globalTooltip) return;
+    const rect = item.getBoundingClientRect();
+    const tipWidth = globalTooltip.offsetWidth || 290;
+    const tipHeight = globalTooltip.offsetHeight || 130;
+
+    // Centrado horizontal
+    const centerLeft = rect.left + rect.width / 2;
+    // Clamp horizontal con margen de 16px para evitar recortes en bordes de pantalla
+    const minLeft = tipWidth / 2 + 16;
+    const maxLeft = window.innerWidth - tipWidth / 2 - 16;
+    const clampedLeft = Math.max(minLeft, Math.min(maxLeft, centerLeft));
+
+    globalTooltip.style.left = `${clampedLeft}px`;
+
+    // Posición vertical: por defecto encima del botón del dock
+    const spaceAbove = rect.top;
+    if (spaceAbove >= tipHeight + 14) {
+      globalTooltip.style.top = `${rect.top - tipHeight - 10}px`;
+      globalTooltip.setAttribute('data-placement', 'top');
+    } else {
+      globalTooltip.style.top = `${rect.bottom + 10}px`;
+      globalTooltip.setAttribute('data-placement', 'bottom');
+    }
+
+    // Desplazamiento de la flecha indicadora hacia el centro exacto del botón
+    const arrowOffset = Math.round(centerLeft - clampedLeft);
+    globalTooltip.style.setProperty('--arrow-offset', `${arrowOffset}px`);
+  }
+
+  dockItemsList.forEach(item => {
+    item.addEventListener('mouseenter', () => showDockTooltip(item));
+    item.addEventListener('focus', () => showDockTooltip(item));
+    item.addEventListener('mouseleave', hideDockTooltip);
+    item.addEventListener('blur', hideDockTooltip);
+  });
+
+  window.addEventListener('scroll', () => {
+    if (globalTooltip && globalTooltip.classList.contains('visible')) {
+      const activeItem = document.querySelector('.dock-item:hover, .dock-item:focus');
+      if (activeItem) positionDockTooltip(activeItem);
+      else hideDockTooltip();
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (globalTooltip && globalTooltip.classList.contains('visible')) {
+      const activeItem = document.querySelector('.dock-item:hover, .dock-item:focus');
+      if (activeItem) positionDockTooltip(activeItem);
+    }
+  }, { passive: true });
+
 });
